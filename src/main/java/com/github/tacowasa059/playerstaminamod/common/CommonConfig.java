@@ -13,7 +13,6 @@ public class CommonConfig {
     public static ForgeConfigSpec.DoubleValue tickSprintConsumptionRate;
     public static ForgeConfigSpec.DoubleValue jumpConsumption;
     public static ForgeConfigSpec.DoubleValue initStamina;
-    public static ForgeConfigSpec.DoubleValue respawnStamina;
 
     public static ForgeConfigSpec.DoubleValue middleThreshold;
 
@@ -31,17 +30,12 @@ public class CommonConfig {
                 .defineInRange("tickSprintConsumptionRate", 0.15, 0.0, 100.0);
 
         jumpConsumption = BUILDER
-                .comment("Stamina consumption when jumping (default: 10.0)")
-                .defineInRange("jumpConsumption", 10.0, 0.0, 100.0);
+                .comment("Stamina consumption when jumping (default: 15.0)")
+                .defineInRange("jumpConsumption", 15.0, 0.0, 100.0);
 
         initStamina = BUILDER
                 .comment("Initial stamina when the player first loads the world (default: 100.0)")
                 .defineInRange("initStamina", 100.0, 0.0, 100.0);
-
-
-        respawnStamina = BUILDER
-                .comment("Stamina after player respawn (default: 100.0)")
-                .defineInRange("respawnStamina", 100.0, 0.0, 100.0);
 
 
         middleThreshold = BUILDER
@@ -49,8 +43,8 @@ public class CommonConfig {
                 .defineInRange("middleThreshold", 33.3f, 0.0, 100.0);
 
         sprintSpeedMultiplier = BUILDER
-                .comment("Multiplier for player speed while sprinting in yellow zone (default: 0.66)")
-                .defineInRange("sprintSpeedMultiplier", 0.66, 0.0, 1.0);
+                .comment("Multiplier for player speed while sprinting in yellow zone (default: 0.85)")
+                .defineInRange("sprintSpeedMultiplier", 0.85, 0.0, 1.0);
 
         BUILDER.pop();
         SPEC = BUILDER.build();

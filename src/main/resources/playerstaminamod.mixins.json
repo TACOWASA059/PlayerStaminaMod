@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "playerstaminamod.refmap.json",
   "mixins": [
+    "common.PlayerMixin"
   ],
   "client": [
     "client.LocalPlayerMixin"

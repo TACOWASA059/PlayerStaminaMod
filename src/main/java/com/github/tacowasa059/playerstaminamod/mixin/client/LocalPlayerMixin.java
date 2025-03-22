@@ -1,6 +1,6 @@
 package com.github.tacowasa059.playerstaminamod.mixin.client;
 
-import com.github.tacowasa059.playerstaminamod.client.StaminaHandler;
+import com.github.tacowasa059.playerstaminamod.common.Accessor.IPlayerStamina;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -21,8 +21,9 @@ public abstract class LocalPlayerMixin {
     @Inject(method="canStartSprinting", at=@At("HEAD"), cancellable = true)
     private void canStartSprinting(CallbackInfoReturnable<Boolean> cir) {
         LocalPlayer player = (LocalPlayer) (Object) this;
+        IPlayerStamina playerStamina = (IPlayerStamina) player;
         cir.setReturnValue(!player.isSprinting() && this.hasEnoughImpulseToStartSprinting() && this.hasEnoughFoodToStartSprinting() && !player.isUsingItem() && !player.hasEffect(MobEffects.BLINDNESS)
-                && (!player.isPassenger() ||this.vehicleCanSprint(player.getVehicle())) && !player.isFallFlying() && !StaminaHandler.isExhausted());
+                && (!player.isPassenger() ||this.vehicleCanSprint(player.getVehicle())) && !player.isFallFlying() && !playerStamina.playerStaminaMod$isExhausted());
         cir.cancel();
     }
 

@@ -1,7 +1,6 @@
 package com.github.tacowasa059.playerstaminamod.common;
 
-import com.github.tacowasa059.playerstaminamod.common.networks.NetworkHandler;
-import com.github.tacowasa059.playerstaminamod.common.networks.StaminaSyncPacket;
+import com.github.tacowasa059.playerstaminamod.common.event.SprintSpeedHandler;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -10,7 +9,6 @@ import com.mojang.brigadier.suggestion.SuggestionProvider;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.network.PacketDistributor;
 
 public class StaminaCommand {
 
@@ -19,7 +17,6 @@ public class StaminaCommand {
         builder.suggest("tickSprintConsumptionRate");
         builder.suggest("jumpConsumption");
         builder.suggest("initStamina");
-        builder.suggest("respawnStamina");
         builder.suggest("middleThreshold");
         builder.suggest("sprintSpeedMultiplier");
         return builder.buildFuture();
@@ -46,7 +43,6 @@ public class StaminaCommand {
             case "tickSprintConsumptionRate" -> value = CommonConfig.tickSprintConsumptionRate.get();
             case "jumpConsumption" -> value = CommonConfig.jumpConsumption.get();
             case "initStamina" -> value = CommonConfig.initStamina.get();
-            case "respawnStamina" -> value = CommonConfig.respawnStamina.get();
             case "middleThreshold" -> value = CommonConfig.middleThreshold.get();
             case "sprintSpeedMultiplier" -> value = CommonConfig.sprintSpeedMultiplier.get();
             default -> {
@@ -64,7 +60,6 @@ public class StaminaCommand {
             case "tickSprintConsumptionRate" -> CommonConfig.tickSprintConsumptionRate.set(value);
             case "jumpConsumption" -> CommonConfig.jumpConsumption.set(value);
             case "initStamina" -> CommonConfig.initStamina.set(value);
-            case "respawnStamina" -> CommonConfig.respawnStamina.set(value);
             case "middleThreshold" -> CommonConfig.middleThreshold.set(value);
             case "sprintSpeedMultiplier" -> CommonConfig.sprintSpeedMultiplier.set(value);
             default -> {
@@ -72,15 +67,7 @@ public class StaminaCommand {
                 return 0;
             }
         }
-        NetworkHandler.INSTANCE.send(PacketDistributor.ALL.noArg(), new StaminaSyncPacket(
-                CommonConfig.tickRecoveryRate.get().floatValue(),
-                CommonConfig.tickSprintConsumptionRate.get().floatValue(),
-                CommonConfig.jumpConsumption.get().floatValue(),
-                CommonConfig.initStamina.get().floatValue(),
-                CommonConfig.respawnStamina.get().floatValue(),
-                CommonConfig.middleThreshold.get().floatValue(),
-                CommonConfig.sprintSpeedMultiplier.get().floatValue()
-        ));
+        SprintSpeedHandler.setSpeedFactor(CommonConfig.sprintSpeedMultiplier.get().floatValue());
         context.getSource().sendSuccess(()->Component.literal("Set " + parameter + " to " + value), true);
         return 1;
     }
