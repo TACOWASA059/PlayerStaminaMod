@@ -5,9 +5,9 @@ import com.github.tacowasa059.playerstaminamod.common.Accessor.IPlayerStamina;
 import com.github.tacowasa059.playerstaminamod.common.CommonConfig;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -65,14 +65,28 @@ public class ServerPlayerEvent {
         IPlayerStamina playerStamina = (IPlayerStamina) player;
 
         // exhausted
-        if(playerStamina.playerStaminaMod$isExhausted()){
-            Vec3 vec3 = entity.getDeltaMovement();
-            entity.setDeltaMovement(new Vec3(vec3.x, 0, vec3.z));
-            return;
-        }
+//        if(playerStamina.playerStaminaMod$isExhausted()){
+//            Vec3 vec3 = entity.getDeltaMovement();
+//            entity.setDeltaMovement(new Vec3(vec3.x, 0, vec3.z));
+//            return;
+//        }
 
         // subtract
         if(!player.level().isClientSide) playerStamina.playerStaminaMod$subtractStamina(CommonConfig.jumpConsumption.get().floatValue());
 
+    }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) { //respawn + change dimension
+        if(event.isWasDeath())return; // remove respawn case
+
+        Player originalPlayer = event.getOriginal();
+        Player newPlayer = event.getEntity();
+
+        IPlayerStamina original_playerData = (IPlayerStamina)originalPlayer;
+        IPlayerStamina new_playerData = (IPlayerStamina)newPlayer;
+
+        new_playerData.playerStaminaMod$setExhausted(original_playerData.playerStaminaMod$isExhausted());
+        new_playerData.playerStaminaMod$setStamina(original_playerData.playerStaminaMod$getStamina());
     }
 }

@@ -20,6 +20,9 @@ public class PlayerMixin implements IPlayerStamina {
     private final String NBT_KEY_STAMINA = "PLAYER_STAMINA";
 
     @Unique
+    private final String NBT_KEY_IS_EXHAUSTED = "PLAYER_IS_EXHAUSTED";
+
+    @Unique
     private static final EntityDataAccessor<Boolean> IS_EXHAUSTED = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
     @Unique
     private static final EntityDataAccessor<Boolean> BELOW_MIDDLE = SynchedEntityData.defineId(Player.class, EntityDataSerializers.BOOLEAN);
@@ -85,11 +88,15 @@ public class PlayerMixin implements IPlayerStamina {
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
     public void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
         compound.putFloat(NBT_KEY_STAMINA, playerStaminaMod$getStamina());
+        compound.putBoolean(NBT_KEY_IS_EXHAUSTED, playerStaminaMod$isExhausted());
     }
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
     public void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
         if (compound.contains(NBT_KEY_STAMINA)) {
             playerStaminaMod$setStamina(compound.getFloat(NBT_KEY_STAMINA));
+        }
+        if (compound.contains(NBT_KEY_IS_EXHAUSTED)){
+            playerStaminaMod$setExhausted(compound.getBoolean(NBT_KEY_IS_EXHAUSTED));
         }
     }
 }
